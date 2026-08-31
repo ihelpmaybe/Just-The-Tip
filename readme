@@ -1,0 +1,22 @@
+One-liner
+Just The Tip — PulseChain tips that buzz your toys live.
+
+Short (store / Discord / bio)
+Just The Tip is a local PulseChain tip-to-buzz app for streamers. Fans tip PLS or listed tokens to your wallet; when it lands on-chain, your linked Lovense (or Intiface) toys buzz the matching tip-menu pattern. Tip QRs encode amount and coin. No accounts, no private keys, PulseChain only — runs on your PC at 127.0.0.1.
+
+Longer (landing / release notes)
+Just The Tip turns on-chain tips into on-stream buzz.
+
+You paste a PulseChain receive wallet, build a tip menu (coins + patterns), and connect toys over Lovense Connect, Bluetooth, or Intiface. Fans scan a QR or send the amount shown; the QR carries the exact amount and token (EIP-681). The app watches the chain, matches the tip to a menu row, and drives the toy.
+
+Optional PulseX pool alerts, OBS tip pop-ups and QR carousel, practice mode (log tips without motors), and HTML/JPG tip-menu export for fans.
+
+Built for operators who want PulseChain tips without custodial wallets or cloud accounts. Everything stays on your machine.
+
+Bullet features
+
+PulseChain tips → live toy buzz
+EIP-681 tip QRs (amount + coin)
+Lovense Connect / Bluetooth / Intiface
+Tip menu, OBS overlays, practice mode
+No accounts · no keys · local only
