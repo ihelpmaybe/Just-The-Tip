@@ -6,7 +6,9 @@ Watch a tip wallet (and optional PulseX pools). When a tip lands, buzz linked to
 
 **No accounts. No private keys. PulseChain only.** Bound to `127.0.0.1`.
 
-**Hub:** [ihelpmaybe.github.io](https://ihelpmaybe.github.io/) · **Source:** this repo
+**Showcase (look only):** https://ihelpmaybe.github.io/Just-The-Tip/  
+**Hub:** [ihelpmaybe.github.io](https://ihelpmaybe.github.io/) · **Source:** this repo  
+GitHub Pages is a peek — tip-to-buzz runs on your PC only.
 
 Requires **Node 20+** for source builds. Operators can skip Node and use the Windows installer (`npm run dist:win`).
 
