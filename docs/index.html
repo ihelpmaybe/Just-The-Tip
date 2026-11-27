@@ -1,180 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="dark">
-  <title>Just The Tip — showcase</title>
-  <meta name="description" content="Showcase peek for Just The Tip. Tip-to-buzz runs on your PC only — not on GitHub Pages.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop stop-color='%23ff0000'/%3E%3Cstop offset='.5' stop-color='%238000ff'/%3E%3Cstop offset='1' stop-color='%2300eaff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='16' height='16' fill='url(%23g)'/%3E%3C/svg%3E">
-  <style>
-    :root {
-      color-scheme: dark;
-      --pls-red: #ff0000;
-      --pls-magenta: #e619e6;
-      --pls-violet: #8000ff;
-      --pls-cyan: #00eaff;
-      --page: #000;
-      --panel: #120a22;
-      --line: #4a28a0;
-      --ink: #f2ecff;
-      --muted: #b9a8e0;
-      --warn: #ffb020;
-      --accent: #00eaff;
-      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-      --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
-    }
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; }
-    body {
-      font-family: var(--font);
-      color: var(--ink);
-      background:
-        radial-gradient(ellipse 80% 50% at 15% -10%, rgba(128, 0, 255, 0.28), transparent 55%),
-        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(0, 234, 255, 0.12), transparent 50%),
-        var(--page);
-      padding: clamp(1rem, 4vw, 2.5rem) clamp(1rem, 4vw, 2.5rem) 3rem;
-      line-height: 1.45;
-    }
-    .wrap { max-width: 720px; margin: 0 auto; }
-    .showcase-banner {
-      margin: 0 0 1rem;
-      padding: 0.45rem 0.7rem;
-      border: 1px solid color-mix(in srgb, var(--warn) 65%, var(--line));
-      background: color-mix(in srgb, var(--warn) 16%, var(--panel));
-      color: var(--ink);
-      font-size: 0.8rem;
-      line-height: 1.35;
-    }
-    .showcase-banner a { color: var(--accent); font-weight: 600; }
-    .showcase-banner code {
-      font-family: var(--mono);
-      font-size: 0.85em;
-    }
-    .eyebrow {
-      margin: 0 0 0.35rem;
-      font-size: 0.75rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .eyebrow a { color: inherit; text-decoration: none; }
-    h1 {
-      margin: 0 0 0.5rem;
-      font-size: clamp(1.75rem, 5vw, 2.4rem);
-      font-weight: 700;
-      background: linear-gradient(30deg, var(--pls-red), var(--pls-magenta), var(--pls-violet), var(--pls-cyan));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .lede { margin: 0 0 1.25rem; color: var(--muted); max-width: 38rem; }
-    .cta-row { display: flex; flex-wrap: wrap; gap: 0.55rem; margin: 0 0 1.75rem; }
-    .cta {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.5rem 0.85rem;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 0.9rem;
-      background: rgba(149, 5, 250, 0.18);
-    }
-    .cta:hover { border-color: var(--accent); }
-    .cta.ghost { background: transparent; color: var(--muted); }
-    .feat {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 0.55rem;
-      margin: 0 0 1.5rem;
-    }
-    .feat span {
-      border: 1px solid #2a1850;
-      border-radius: 10px;
-      padding: 0.65rem 0.75rem;
-      font-size: 0.86rem;
-      color: var(--muted);
-    }
-    .steps {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 0.55rem;
-    }
-    .steps li {
-      border: 1px solid #2a1850;
-      border-radius: 10px;
-      padding: 0.75rem 0.9rem;
-      background: rgba(10, 6, 20, 0.65);
-      font-size: 0.92rem;
-      color: var(--muted);
-    }
-    .steps code { font-family: var(--mono); color: var(--accent); font-size: 0.86em; }
-    .section-label {
-      margin: 0 0 0.65rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    footer {
-      margin-top: 2.5rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-    footer a { color: var(--accent); }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="showcase-banner" role="status">
-      <strong>Showcase peek</strong>
-      — look only. Do not treat GitHub Pages as a tip-to-buzz front end.
-      <a href="https://github.com/ihelpmaybe/Just-The-Tip">Clone the repo</a>
-      or build the Windows installer → run
-      <code>npm run desktop</code> / <code>npm run dist:win</code>
-      on your PC to watch tips and buzz toys.
-    </div>
-
-    <p class="eyebrow">
-      <a href="https://ihelpmaybe.github.io/">← hub</a> · pulsechain · v2.0.29
-    </p>
-    <h1>Just The Tip</h1>
-    <p class="lede">
-      Local PulseChain tip-to-buzz for streamers. Fans tip PLS or listed tokens;
-      your linked Lovense / Intiface toys buzz the tip-menu pattern. No accounts. No private keys.
-    </p>
-
-    <div class="cta-row">
-      <a class="cta" href="https://github.com/ihelpmaybe/Just-The-Tip" rel="noopener">GitHub</a>
-      <a class="cta ghost" href="https://github.com/ihelpmaybe/Just-The-Tip#readme" rel="noopener">README</a>
-      <a class="cta ghost" href="https://ihelpmaybe.github.io/" rel="noopener">ihelpmaybe hub</a>
-    </div>
-
-    <p class="section-label">What you get (on your PC)</p>
-    <div class="feat">
-      <span>PulseChain tip watch</span>
-      <span>EIP-681 tip QRs</span>
-      <span>Lovense / BLE / Intiface</span>
-      <span>OBS tip + QR overlays</span>
-      <span>Practice mode</span>
-      <span>0% in the app</span>
-    </div>
-
-    <p class="section-label">Run local</p>
-    <ol class="steps">
-      <li>Clone <code>github.com/ihelpmaybe/Just-The-Tip</code></li>
-      <li><code>npm install</code></li>
-      <li><code>npm run desktop</code> — or <code>npm run dist:win</code> for the Setup</li>
-      <li>Paste tip wallet → connect toy → Start watching</li>
-    </ol>
-
-    <footer>
-      <a href="https://github.com/ihelpmaybe/Just-The-Tip" rel="noopener">github.com/ihelpmaybe/Just-The-Tip</a>
-      · MIT · Pages = showcase only
-    </footer>
-  </div>
-</body>
+<!doctype html>
+<html lang="en" class="night">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/Just-The-Tip/brand/just-the-tip-logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#050d18" />
+    <meta name="description" content="Just The Tip — PulseChain tip-to-buzz for Lovense &amp; Intiface. Local only. No accounts, no private keys." />
+    <title>Just The Tip</title>
+    <script type="module" crossorigin src="/Just-The-Tip/assets/index-Cl8Pkvfy.js"></script>
+    <link rel="modulepreload" crossorigin href="/Just-The-Tip/assets/rolldown-runtime-hePW80VL.js">
+    <link rel="modulepreload" crossorigin href="/Just-The-Tip/assets/utils-Bpv4vmSW.js">
+    <link rel="modulepreload" crossorigin href="/Just-The-Tip/assets/localBatchGatewayRequest-UqB8mj4T.js">
+    <link rel="modulepreload" crossorigin href="/Just-The-Tip/assets/secp256k1-C0FC5ww2.js">
+    <link rel="stylesheet" crossorigin href="/Just-The-Tip/assets/index-CsHCX5VH.css">
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
 </html>

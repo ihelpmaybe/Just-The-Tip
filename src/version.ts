@@ -3,8 +3,16 @@ export const APP_NAME = 'Just The Tip'
 /** Filenames / npm / Lovense platform header. Not a localStorage key. */
 export const APP_SLUG = 'just-the-tip'
 export const APP_VERSION = '2.0.29'
-/** App lockup (PNG). PulseChain mark stays at /brand/pulsechain-mark.svg */
-export const APP_LOGO = '/brand/just-the-tip-logo.png'
+/** App lockup (PNG). PulseChain mark stays under public/brand/. */
+function appLogoPath() {
+  try {
+    const base = import.meta.env?.BASE_URL || '/'
+    return `${base}brand/just-the-tip-logo.png`
+  } catch {
+    return '/brand/just-the-tip-logo.png'
+  }
+}
+export const APP_LOGO = appLogoPath()
 
 /** Project tip jar (PulseChain / EVM). Display only — not the tip-receive wallet. */
 export const DONATION_ADDRESS = '0x391B584E7E5BEF2e1D6EbB45Bb265281e273A5Ff'

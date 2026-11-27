@@ -495,7 +495,10 @@ function justTheTipApiPlugin(): Plugin {
   }
 }
 
+const pagesBase = process.env.VITE_PAGES_BASE || '/'
+
 export default defineConfig({
+  base: pagesBase,
   plugins: [justTheTipApiPlugin()],
   resolve: {
     alias: {

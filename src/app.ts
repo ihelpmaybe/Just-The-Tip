@@ -59,6 +59,7 @@ import {
 } from './state/paymentsLog'
 import { qs, short } from './ui/dom'
 import { appShellHtml } from './ui/layout'
+import { isPagesShowcase, SHOWCASE_BANNER_HTML } from './pagesFace'
 import {
   createPageNavigation,
   pageFromHash,
@@ -141,7 +142,12 @@ export function mountApp(root: HTMLElement) {
     }
   })()
 
-  root.innerHTML = appShellHtml()
+  root.innerHTML =
+    (isPagesShowcase() ? SHOWCASE_BANNER_HTML : '') + appShellHtml()
+  if (isPagesShowcase()) {
+    document.documentElement.dataset.pagesShowcase = '1'
+    root.classList.add('app--showcase')
+  }
   const $ = <T extends HTMLElement>(id: string) => qs<T>(root, id)
 
   /** Replaced after showError exists so failed writes surface in the banner. */

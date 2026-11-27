@@ -42,6 +42,7 @@
     "desktop:icon": "node scripts/make-win-icon.mjs",
     "desktop": "npm run build && npm run desktop:bundle && npm run desktop:icon && electron .",
     "dist:win": "npm run build && npm run desktop:bundle && npm run desktop:icon && electron-builder --win nsis",
+    "build:pages": "node scripts/build-pages.mjs",
     "smoke:sku": "tsx scripts/smoke-sku-unique.mts",
     "smoke:obs": "tsx scripts/smoke-obs-actions.mts",
     "smoke:ui": "tsx scripts/smoke-ui-deep.mts",

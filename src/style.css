@@ -1,3 +1,27 @@
+/* GitHub Pages peek — same posture as Hearts Gallery / HEXmob */
+.showcase-banner {
+  margin: 0 0 0.45rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid color-mix(in srgb, #ffb020 65%, rgba(0, 200, 255, 0.14));
+  background: color-mix(in srgb, #ffb020 16%, rgba(8, 20, 40, 0.92));
+  color: var(--ink, #e8f4ff);
+  font-family: var(--sans, system-ui, sans-serif);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  position: relative;
+  z-index: 40;
+}
+.showcase-banner a {
+  color: var(--ember, #00c8ff);
+  font-weight: 600;
+}
+.showcase-banner code {
+  font-size: 0.85em;
+}
+html[data-pages-showcase='1'] .btn-header-watch {
+  opacity: 0.55;
+}
+
 :root,
 html.night {
   color-scheme: dark;
