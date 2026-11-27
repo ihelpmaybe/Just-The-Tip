@@ -1,0 +1,18 @@
+Customer pack export
+====================
+
+1. Upload active.json to this public URL (overwrite each price change):
+   sdfgsef
+
+2. Send customers the other files (or the whole zip).
+   They open index.html — no login to your home network.
+
+3. When you change prices: re-export, re-upload active.json,
+   send customers the new zip. Old packs fail freshness + won't match tips.
+
+4. Emergency kill: Admin → Revoke catalog, then upload new active.json
+   (revoked: true). Old packs block Pay.
+
+catalogRevision: 8
+expiresAt: 2026-08-11T02:24:02.481Z
+tipAddress: 0x02db55ca28ba4b76120a0c7b94be6c27a33afffd

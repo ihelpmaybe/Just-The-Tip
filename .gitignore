@@ -1,0 +1,54 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+debug-*.log
+
+node_modules
+dist
+dist-ssr
+*.local
+host.config.json
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.cursor
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local runtime noise
+.dev-emu*
+host.config.json
+/host.mjs
+/main.mjs
+
+# Local-only / do not publish
+backups/
+WORKING-VERSION.md
+*.apk
+release/
+release-build/
+release-ble/
+release-new/
+tmp/
+tmp-*
+ts-prune*.txt
+desktop/host.cjs
+
+# Secrets / machine-local (never commit)
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+wallet.json

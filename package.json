@@ -1,0 +1,123 @@
+{
+  "name": "just-the-tip",
+  "private": false,
+  "version": "2.0.29",
+  "type": "module",
+  "description": "Just The Tip — PulseChain-only tip-to-buzz controller for Lovense and Intiface toys.",
+  "author": "ihelpmaybe",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ihelpmaybe/Just-The-Tip.git"
+  },
+  "homepage": "https://github.com/ihelpmaybe/Just-The-Tip#readme",
+  "bugs": {
+    "url": "https://github.com/ihelpmaybe/Just-The-Tip/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5193 --strictPort",
+    "build": "tsc && vite build",
+    "start": "npm run build && tsx server/host.ts",
+    "host": "tsx server/host.ts",
+    "stop": "node scripts/stop-local.mjs",
+    "typecheck": "tsc --noEmit",
+    "typecheck:shared": "tsc --noEmit -p shared/tsconfig.json",
+    "verify:shared": "npm run typecheck:shared && npm run typecheck",
+    "verify:ladder": "tsx scripts/verify-multi-toy-ladder.mts",
+    "verify:buzz-queue": "tsx scripts/verify-buzz-queue.mts",
+    "verify:wallets": "tsx scripts/verify-wallets.mts",
+    "verify:eip681": "tsx scripts/verify-eip681.mts",
+    "verify:pools": "tsx scripts/verify-pool-suggest.mts",
+    "verify:coin-rewards": "tsx scripts/verify-coin-rewards.mts",
+    "verify:ladder-rescale": "tsx scripts/verify-tip-ladder-rescale.mts",
+    "verify:saved-toys": "tsx scripts/verify-saved-toys.mts",
+    "verify:sku": "tsx scripts/verify-sku-uniqueness.mts",
+    "verify:overlay": "tsx scripts/verify-overlay-style.mts",
+    "verify:coverage": "tsx scripts/verify-test-coverage.mts",
+    "verify:release": "tsx scripts/verify-release.mts",
+    "desktop:bundle": "node scripts/bundle-desktop.mjs",
+    "desktop:icon": "node scripts/make-win-icon.mjs",
+    "desktop": "npm run build && npm run desktop:bundle && npm run desktop:icon && electron .",
+    "dist:win": "npm run build && npm run desktop:bundle && npm run desktop:icon && electron-builder --win nsis",
+    "smoke:sku": "tsx scripts/smoke-sku-unique.mts",
+    "smoke:obs": "tsx scripts/smoke-obs-actions.mts",
+    "smoke:ui": "tsx scripts/smoke-ui-deep.mts",
+    "smoke:wallets": "tsx scripts/smoke-wallets-vicious.mts",
+    "smoke:settings-persist": "tsx scripts/smoke-settings-persist.mts",
+    "smoke:vicious": "npm run verify:wallets && npm run smoke:wallets"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@types/qrcode": "^1.5.6",
+    "playwright": "^1.62.1",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.25.9",
+    "tsx": "^4.20.5",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0"
+  },
+  "dependencies": {
+    "@pulsefans/domain": "file:./shared",
+    "buttplug": "^5.0.1",
+    "qrcode": "^1.5.4",
+    "viem": "^2.55.11"
+  },
+  "main": "desktop/main.mjs",
+  "build": {
+    "appId": "life.justthetip.desktop",
+    "productName": "Just The Tip",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "desktop/main.mjs",
+      "desktop/host.mjs",
+      "desktop/blePicker.mjs",
+      "desktop/ble-picker.html",
+      "desktop/ble-picker-preload.cjs",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "dist",
+        "to": "ui"
+      },
+      {
+        "from": "build/icon.png",
+        "to": "icon.png"
+      }
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "signExecutable": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Just The Tip",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerLanguages": [
+        "en_US"
+      ],
+      "include": "build/installer.nsh",
+      "warningsAsErrors": false,
+      "artifactName": "JustTheTip-Setup-${version}.exe"
+    }
+  }
+}

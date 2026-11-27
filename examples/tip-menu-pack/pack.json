@@ -1,0 +1,219 @@
+{
+    "schema":  1,
+    "packId":  "cp-8-msl6if8x",
+    "catalogRevision":  8,
+    "exportedAt":  "2026-08-09T02:24:02.481Z",
+    "expiresAt":  "2026-08-11T02:24:02.481Z",
+    "checkUrl":  "",
+    "freshness":  "required",
+    "freshnessFailMinutes":  5,
+    "network":  "pulsechain",
+    "chainId":  369,
+    "nativeSymbol":  "PLS",
+    "tipAddress":  "0x0000000000000000000000000000000000000000",
+    "tipTokens":  [
+                      {
+                          "symbol":  "WPLS",
+                          "address":  "0xa1077a294dde1b09bb078844df40758a5d0f9a27",
+                          "decimals":  18
+                      },
+                      {
+                          "symbol":  "PLSX",
+                          "address":  "0x95b303987a60c71504d99aa1b13b4da07b0790ab",
+                          "decimals":  18
+                      },
+                      {
+                          "symbol":  "HEX",
+                          "address":  "0x2b591e99afe9f32eaa6214f7b7629768c40eeb39",
+                          "decimals":  8
+                      },
+                      {
+                          "symbol":  "INC",
+                          "address":  "0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d",
+                          "decimals":  18
+                      },
+                      {
+                          "symbol":  "eDAI",
+                          "address":  "0xefd766ccb38eaf1dfd701853bfce31359239f305",
+                          "decimals":  18
+                      },
+                      {
+                          "symbol":  "eUSDC",
+                          "address":  "0x15d38573d2feeb82e7ad5187ab8c1d52810b1f07",
+                          "decimals":  6
+                      },
+                      {
+                          "symbol":  "eUSDT",
+                          "address":  "0x0cb6f5a34ad42ec934882a05265a7d5f59b51a2f",
+                          "decimals":  6
+                      }
+                  ],
+    "plsPerUsd":  103135.31,
+    "priceUsd":  0.000009696,
+    "rateLocked":  true,
+    "unlockedPacks":  [
+                          "thrust"
+                      ],
+    "featured":  {
+                     "premiumId":  null,
+                     "popularId":  null,
+                     "signatureId":  null,
+                     "mode":  "auto"
+                 },
+    "items":  [
+                  {
+                      "id":  "thrust-hello",
+                      "name":  "Shallow hello",
+                      "blurb":  "machine · short soft strokes",
+                      "tag":  "thrust",
+                      "pack":  "thrust",
+                      "science":  false,
+                      "steps":  [
+                                    2,
+                                    3,
+                                    2,
+                                    3,
+                                    2,
+                                    4,
+                                    2
+                                ],
+                      "timeSec":  6,
+                      "intervalMs":  700,
+                      "peak":  4,
+                      "strokes":  7,
+                      "price":  "3370462",
+                      "priceUsd":  32.68
+                  },
+                  {
+                      "id":  "thrust-slow",
+                      "name":  "Deep slow",
+                      "blurb":  "machine · full travel · unhurried",
+                      "tag":  "thrust",
+                      "pack":  "thrust",
+                      "science":  false,
+                      "steps":  [
+                                    1,
+                                    6,
+                                    1,
+                                    7,
+                                    1,
+                                    6,
+                                    2,
+                                    7
+                                ],
+                      "timeSec":  10,
+                      "intervalMs":  900,
+                      "peak":  7,
+                      "strokes":  8,
+                      "price":  "9904084",
+                      "priceUsd":  96.03
+                  },
+                  {
+                      "id":  "thrust-pulse",
+                      "name":  "Piston pulse",
+                      "blurb":  "machine · mid depth · even tempo",
+                      "tag":  "thrust",
+                      "pack":  "thrust",
+                      "science":  false,
+                      "steps":  [
+                                    3,
+                                    5,
+                                    3,
+                                    5,
+                                    3,
+                                    6,
+                                    3,
+                                    5,
+                                    3
+                                ],
+                      "timeSec":  8,
+                      "intervalMs":  450,
+                      "peak":  6,
+                      "strokes":  9,
+                      "price":  "13170379",
+                      "priceUsd":  127.7
+                  },
+                  {
+                      "id":  "thrust-build",
+                      "name":  "Stroke build",
+                      "blurb":  "machine · deeper + faster",
+                      "tag":  "thrust",
+                      "pack":  "thrust",
+                      "science":  false,
+                      "steps":  [
+                                    2,
+                                    3,
+                                    4,
+                                    5,
+                                    4,
+                                    6,
+                                    3,
+                                    7,
+                                    4,
+                                    8,
+                                    5
+                                ],
+                      "timeSec":  10,
+                      "intervalMs":  550,
+                      "peak":  8,
+                      "strokes":  11,
+                      "price":  "17488655",
+                      "priceUsd":  169.57
+                  },
+                  {
+                      "id":  "thrust-staccato",
+                      "name":  "Staccato",
+                      "blurb":  "machine · jab · rest · jab",
+                      "tag":  "thrust",
+                      "pack":  "thrust",
+                      "science":  false,
+                      "steps":  [
+                                    2,
+                                    7,
+                                    0,
+                                    0,
+                                    3,
+                                    8,
+                                    0,
+                                    0,
+                                    4,
+                                    8,
+                                    0
+                                ],
+                      "timeSec":  8,
+                      "intervalMs":  350,
+                      "peak":  8,
+                      "strokes":  6,
+                      "price":  "20126856",
+                      "priceUsd":  195.15
+                  },
+                  {
+                      "id":  "thrust-wrecker",
+                      "name":  "Wrecker",
+                      "blurb":  "machine · hard deep finish",
+                      "tag":  "thrust",
+                      "pack":  "thrust",
+                      "science":  false,
+                      "steps":  [
+                                    4,
+                                    8,
+                                    5,
+                                    8,
+                                    6,
+                                    8,
+                                    4,
+                                    8,
+                                    7,
+                                    8,
+                                    8
+                                ],
+                      "timeSec":  10,
+                      "intervalMs":  320,
+                      "peak":  8,
+                      "strokes":  11,
+                      "price":  "25074257",
+                      "priceUsd":  243.12
+                  }
+              ],
+    "message":  ""
+}

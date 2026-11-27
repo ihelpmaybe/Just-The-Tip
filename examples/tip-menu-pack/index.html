@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#120a14" />
+  <title>Tip menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+/* Static customer tip pack — no host server required after export */
+
+:root {
+  --bg: #0c080c;
+  --ink: #f2ebe3;
+  --muted: #a89f94;
+  --line: #3a342c;
+  --accent: #e8a54b;
+  --ok: #7dcea0;
+  --bad: #e87a7a;
+  --warn: #e8c04b;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --sans: "Outfit", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(232, 165, 75, 0.9);
+  outline-offset: 2px;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(180, 70, 110, 0.22), transparent 55%),
+    var(--bg);
+  padding-bottom: 5.5rem;
+}
+
+.shell {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1rem 0.9rem 2rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 1.65rem;
+  letter-spacing: -0.03em;
+}
+
+.sub {
+  color: var(--muted);
+  margin: 0.35rem 0 0.5rem;
+  line-height: 1.4;
+}
+
+.meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.tip-wallet {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+}
+
+.chip {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.chip.is-ok {
+  color: var(--ok);
+  border-color: rgba(125, 206, 160, 0.45);
+}
+
+.chip.is-warn {
+  color: var(--warn);
+  border-color: rgba(232, 192, 75, 0.45);
+}
+
+.chip.is-bad {
+  color: var(--bad);
+  border-color: rgba(232, 122, 122, 0.5);
+}
+
+.stage {
+  text-align: left;
+  margin: 1rem 0 1.25rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.wave-stage {
+  position: relative;
+  height: 8.5rem;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(120% 90% at 50% 50%, rgba(232, 165, 75, 0.08), transparent 55%),
+    linear-gradient(180deg, #0a0d10 0%, #141018 100%);
+  box-shadow: inset 0 0 32px rgba(0, 0, 0, 0.4);
+}
+
+.wave-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.wave-hud {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.55rem;
+  z-index: 2;
+  pointer-events: none;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+}
+
+.wave-hud .intensity {
+  font-size: 1.65rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #fff6e8;
+}
+
+.wave-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 246, 224, 0.04) 48%,
+    rgba(255, 246, 224, 0.1) 50%,
+    rgba(255, 246, 224, 0.04) 52%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: waveScan 3.6s linear infinite;
+  opacity: 0.6;
+  mix-blend-mode: soft-light;
+}
+
+@keyframes waveScan {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-scan {
+    animation: none;
+    opacity: 0.2;
+  }
+
+  .ring.is-popular-idle {
+    animation: none !important;
+  }
+
+  .pattern-card.is-live {
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.ring {
+  display: none;
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: 0 auto 0.65rem;
+  border-radius: 50%;
+  place-items: center;
+  background: conic-gradient(
+    var(--accent) var(--fill, 0%),
+    #222a30 var(--fill, 0%)
+  );
+  box-shadow: 0 0 24px rgba(232, 165, 75, 0.15);
+}
+
+.ring.is-live {
+  box-shadow: 0 0 32px rgba(232, 165, 75, 0.35);
+}
+
+.ring.is-popular-idle {
+  animation: popularIdlePulse 2.4s ease-in-out infinite;
+  box-shadow: 0 0 18px rgba(232, 165, 75, 0.12);
+}
+
+@keyframes popularIdlePulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.92;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+
+.ring .intensity {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: #120e12;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.stage-line {
+  margin: 0;
+  font-weight: 600;
+}
+
+.stage-sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+h2 {
+  font-size: 1rem;
+  margin: 0 0 0.55rem;
+}
+
+.featured {
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1.25rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.card,
+.pick {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(12, 14, 18, 0.75);
+  padding: 0.65rem 0.7rem;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
+}
+
+.pick.is-popular {
+  border: 2px solid rgba(255, 196, 110, 0.75);
+  box-shadow:
+    0 0 0 2px rgba(232, 165, 75, 0.2),
+    0 0 24px rgba(232, 165, 75, 0.22);
+  order: -1;
+}
+
+.card.is-selected,
+.pick.is-selected {
+  border-color: rgba(232, 165, 75, 0.85);
+}
+
+.role {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.card h3,
+.pick-name {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.wave {
+  width: 100%;
+  height: 36px;
+  margin: 0.15rem 0;
+}
+
+.wave svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.outcome {
+  font-size: 0.72rem;
+  color: #e0d2bc;
+  margin: 0;
+}
+
+.price {
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: #ffd28a;
+  font-weight: 600;
+}
+
+.price-sub {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--muted);
+}
+
+.pattern-bar {
+  fill: rgba(232, 165, 75, 0.55);
+}
+
+.pattern-bar.is-lit {
+  fill: #ffd28a;
+  filter: brightness(1.2);
+}
+
+.exact-banner {
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(232, 165, 75, 0.4);
+  background: rgba(120, 70, 20, 0.22);
+  color: #ffe6c0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.exact-callout {
+  margin: 0 0 0.65rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(232, 165, 75, 0.28);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: #ffd28a;
+  line-height: 1.35;
+}
+
+.exact-callout.is-empty {
+  color: var(--muted);
+  border-color: var(--line);
+}
+
+.exact-tip {
+  margin: 0.15rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: #e8c98a;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.pay-dock {
+  margin-top: 1.25rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(232, 140, 160, 0.35);
+  border-radius: 12px;
+  background: linear-gradient(165deg, rgba(220, 90, 120, 0.1), rgba(0, 0, 0, 0.35));
+}
+
+.pay-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+  font-weight: 600;
+}
+
+.pay-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.lbl {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.lbl input,
+.lbl select {
+  padding: 0.55rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #0c0a0c;
+  color: var(--ink);
+  font: inherit;
+}
+
+.addr-line {
+  font-size: 0.75rem;
+  color: var(--muted);
+  word-break: break-all;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  padding: 0.65rem 0.9rem;
+  cursor: pointer;
+}
+
+.btn.primary {
+  width: 100%;
+  margin-top: 0.55rem;
+  background: linear-gradient(180deg, #f2b455, #c97a22);
+  color: #1a1006;
+  border: none;
+  font-weight: 700;
+  min-height: 3rem;
+}
+
+.btn.primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn.ghost {
+  margin-top: 0.45rem;
+  font-size: 0.85rem;
+}
+
+.tip-status {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+}
+
+.tip-status.is-err {
+  color: var(--bad);
+}
+
+.foot {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.warn {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 0.55rem 0.85rem;
+  background: rgba(80, 55, 10, 0.95);
+  border-bottom: 1px solid rgba(232, 192, 75, 0.5);
+  color: #ffe6a8;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.warn[hidden] {
+  display: none !important;
+}
+
+/* is-open class wins over any leftover display rules / older browsers ignoring [hidden] */
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(8, 6, 8, 0.94);
+  display: none !important;
+  place-items: center;
+  padding: 1.25rem;
+}
+
+.gate.is-open {
+  display: grid !important;
+}
+
+.gate[hidden]:not(.is-open) {
+  display: none !important;
+}
+
+.gate-box {
+  max-width: 22rem;
+  padding: 1.35rem;
+  border-radius: 12px;
+  border: 1px solid #3a342c;
+  background: #161218;
+}
+
+.gate-box h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+}
+
+.gate-box p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.45;
+  font-size: 0.92rem;
+}
+
+.stick {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem calc(0.7rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(10, 12, 16, 0.94);
+  border-top: 1px solid rgba(232, 165, 75, 0.35);
+}
+
+.stick-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+#stick-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#stick-price {
+  font-family: var(--mono);
+  color: #ffd28a;
+  font-size: 0.9rem;
+}
+
+.stick .btn {
+  flex-shrink: 0;
+  min-width: 7rem;
+}
+
+body.pay-ready .stick {
+  padding: 0.55rem 0.65rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+}
+
+body.pay-ready .stick-meta {
+  display: none;
+}
+
+body.pay-ready .stick .btn {
+  width: 100%;
+  flex: 1;
+}
+
+  </style>
+</head>
+<body>
+  <div id="gate" class="gate" hidden>
+    <div class="gate-box">
+      <h1 id="gate-title">Menu locked</h1>
+      <p id="gate-body">This tip menu is no longer valid. Ask the host for the current link.</p>
+    </div>
+  </div>
+
+  <div id="warn" class="warn" hidden></div>
+  <div class="sr-only" id="status-announce" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="shell">
+    <header class="hero">
+      <h1>Tip menu</h1>
+      <p class="sub">Pick a pattern · send the <strong>exact</strong> listed amount · host feels it</p>
+      <p class="meta" id="pack-meta">Loading…</p>
+      <p class="tip-wallet" id="tip-wallet"></p>
+      <button type="button" class="btn ghost" id="btn-connect">Connect wallet</button>
+    </header>
+
+    <section class="status-row">
+      <span class="chip" id="chip-fresh">Checking menu…</span>
+      <span class="chip" id="chip-rev" hidden></span>
+    </section>
+
+    <p class="exact-banner" id="exact-banner">
+      Tips must match the listed amount exactly — wrong size won’t run the pattern.
+    </p>
+
+    <section class="stage stage-wave">
+      <div class="wave-stage" id="pattern-stage">
+        <canvas
+          id="wave-canvas"
+          class="wave-canvas"
+          width="640"
+          height="140"
+          aria-hidden="true"
+        ></canvas>
+        <div class="wave-hud">
+          <span class="intensity" id="intensity-num">0</span>
+        </div>
+        <div class="wave-scan" aria-hidden="true"></div>
+      </div>
+      <p class="stage-line" id="stage-line">Pick a pattern</p>
+      <p class="stage-sub" id="stage-sub">Preview the feel · tip runs the real thing</p>
+    </section>
+
+    <section>
+      <h2>Start here</h2>
+      <div class="featured" id="featured"></div>
+    </section>
+
+    <section>
+      <h2>All patterns</h2>
+      <div class="grid" id="menu-grid"></div>
+    </section>
+
+    <section class="pay-dock" id="pay-dock">
+      <div class="pay-meta">
+        <span id="sel-name">No pattern</span>
+        <span id="sel-price">—</span>
+      </div>
+      <p class="exact-callout" id="exact-tip-line">Pick a pattern — the amount locks to the menu price</p>
+      <div class="pay-row">
+        <label class="lbl">
+          Token
+          <select id="tip-token" aria-label="Tip token"><option value="native">PLS</option></select>
+        </label>
+        <label class="lbl">
+          Amount (exact)
+          <input id="tip-amount" type="text" inputmode="decimal" readonly aria-label="Exact tip amount" title="Must match the menu price exactly" />
+        </label>
+      </div>
+      <p class="addr-line">To <code id="tip-address">—</code></p>
+      <button type="button" class="btn primary" id="btn-pay" disabled>Pay · feel it</button>
+      <p class="tip-status" id="tip-status"></p>
+    </section>
+
+    <footer class="foot">
+      <p>Video is elsewhere · this page is only for the tip</p>
+    </footer>
+  </div>
+
+  <div class="stick" id="stick">
+    <div class="stick-meta">
+      <span id="stick-name">Pick a pattern</span>
+      <span id="stick-price">—</span>
+    </div>
+    <button type="button" class="btn primary" id="stick-pay" disabled>Pay</button>
+  </div>
+
+    <script>
+/* prices + jar baked at export — do not edit */
+window.__CHAIN_HAPTIC_PACK__={"schema":2,"packId":"cp-8-msl78o1i","catalogRevision":8,"exportedAt":"2026-08-09T02:44:26.934Z","expiresAt":null,"checkUrl":"","freshness":"none","freshnessFailMinutes":5,"network":"pulsechain","chainId":369,"nativeSymbol":"PLS","tipAddress":"0x02db55ca28ba4b76120a0c7b94be6c27a33afffd","tipTokens":[{"symbol":"WPLS","address":"0xa1077a294dde1b09bb078844df40758a5d0f9a27","decimals":18},{"symbol":"PLSX","address":"0x95b303987a60c71504d99aa1b13b4da07b0790ab","decimals":18},{"symbol":"HEX","address":"0x2b591e99afe9f32eaa6214f7b7629768c40eeb39","decimals":8},{"symbol":"INC","address":"0x2fa878ab3f87cc1c9737fc071108f904c0b0c95d","decimals":18},{"symbol":"eDAI","address":"0xefd766ccb38eaf1dfd701853bfce31359239f305","decimals":18},{"symbol":"eUSDC","address":"0x15d38573d2feeb82e7ad5187ab8c1d52810b1f07","decimals":6},{"symbol":"eUSDT","address":"0x0cb6f5a34ad42ec934882a05265a7d5f59b51a2f","decimals":6}],"plsPerUsd":103135.31,"priceUsd":0.000009696,"rateLocked":true,"unlockedPacks":["thrust"],"featured":{"premiumId":null,"popularId":null,"signatureId":null,"mode":"auto"},"items":[{"id":"thrust-hello","name":"Shallow hello","blurb":"machine · short soft strokes","tag":"thrust","pack":"thrust","science":false,"steps":[2,3,2,3,2,4,2],"timeSec":6,"intervalMs":700,"peak":4,"strokes":7,"price":"3370462","priceUsd":32.68},{"id":"thrust-slow","name":"Deep slow","blurb":"machine · full travel · unhurried","tag":"thrust","pack":"thrust","science":false,"steps":[1,6,1,7,1,6,2,7],"timeSec":10,"intervalMs":900,"peak":7,"strokes":8,"price":"9904084","priceUsd":96.03},{"id":"thrust-pulse","name":"Piston pulse","blurb":"machine · mid depth · even tempo","tag":"thrust","pack":"thrust","science":false,"steps":[3,5,3,5,3,6,3,5,3],"timeSec":8,"intervalMs":450,"peak":6,"strokes":9,"price":"13170379","priceUsd":127.7},{"id":"thrust-build","name":"Stroke build","blurb":"machine · deeper + faster","tag":"thrust","pack":"thrust","science":false,"steps":[2,3,4,5,4,6,3,7,4,8,5],"timeSec":10,"intervalMs":550,"peak":8,"strokes":11,"price":"17488655","priceUsd":169.57},{"id":"thrust-staccato","name":"Staccato","blurb":"machine · jab · rest · jab","tag":"thrust","pack":"thrust","science":false,"steps":[2,7,0,0,3,8,0,0,4,8,0],"timeSec":8,"intervalMs":350,"peak":8,"strokes":6,"price":"20126856","priceUsd":195.15},{"id":"thrust-wrecker","name":"Wrecker","blurb":"machine · hard deep finish","tag":"thrust","pack":"thrust","science":false,"steps":[4,8,5,8,6,8,4,8,7,8,8],"timeSec":10,"intervalMs":320,"peak":8,"strokes":11,"price":"25074257","priceUsd":243.12}],"message":""};
+  </script>
+  <script>
+/**
+ * Immersive pattern wave preview (oscilloscope-style).
+ * Amplitude tracks pattern steps in real time; used by admin / front / packs.
+ */
+(function (global) {
+  "use strict";
+
+  var MAX_STEP = 8;
+
+  function clamp(n, a, b) {
+    return Math.max(a, Math.min(b, n));
+  }
+
+  /** Smooth intensity 0..1 from discrete menu steps + elapsed ms. */
+  function intensity01(steps, intervalMs, elapsedMs) {
+    var arr = steps && steps.length ? steps : [2, 4, 3];
+    var iv = Math.max(80, Number(intervalMs) || 400);
+    var n = arr.length;
+    var cycle = n * iv;
+    var t = ((elapsedMs % cycle) + cycle) % cycle;
+    var i0 = Math.floor(t / iv) % n;
+    var i1 = (i0 + 1) % n;
+    var frac = (t % iv) / iv;
+    var u = frac * frac * (3 - 2 * frac);
+    var a = clamp(Number(arr[i0]) || 0, 0, MAX_STEP) / MAX_STEP;
+    var b = clamp(Number(arr[i1]) || 0, 0, MAX_STEP) / MAX_STEP;
+    return a + (b - a) * u;
+  }
+
+  /**
+   * @param {HTMLCanvasElement} canvas
+   * @param {{
+   *   onLevel?: (level0to8: number, amp01: number) => void,
+   *   accent?: string,
+   *   scale20?: boolean
+   * }} [opts]
+   */
+  function createWavePreview(canvas, opts) {
+    opts = opts || {};
+    if (!canvas || !canvas.getContext) {
+      return {
+        start: function () {},
+        stop: function () {},
+        idle: function () {},
+        destroy: function () {},
+        isRunning: function () {
+          return false;
+        },
+      };
+    }
+
+    var ctx = canvas.getContext("2d");
+    var onLevel = typeof opts.onLevel === "function" ? opts.onLevel : null;
+    var accent = opts.accent || "#e8a54b";
+    var show20 = opts.scale20 !== false;
+
+    var raf = 0;
+    var running = false;
+    var idleMode = true;
+    var steps = [2, 4, 3];
+    var intervalMs = 400;
+    var startMs = 0;
+    var untilMs = 0;
+    var loop = false;
+    var reduced =
+      typeof matchMedia === "function" &&
+      matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var phase = 0;
+    var lastNow = 0;
+    var smoothAmp = 0.08;
+
+    function cssSize() {
+      var w = canvas.clientWidth || canvas.offsetWidth || 320;
+      var h = canvas.clientHeight || canvas.offsetHeight || 140;
+      return { w: Math.max(120, w), h: Math.max(72, h) };
+    }
+
+    function resize() {
+      var dpr = Math.min(2.5, global.devicePixelRatio || 1);
+      var sz = cssSize();
+      var nw = Math.round(sz.w * dpr);
+      var nh = Math.round(sz.h * dpr);
+      if (canvas.width !== nw || canvas.height !== nh) {
+        canvas.width = nw;
+        canvas.height = nh;
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return sz;
+    }
+
+    function hexRgb(hex) {
+      var h = String(hex || "").replace("#", "");
+      if (h.length === 3) {
+        h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+      }
+      var n = parseInt(h, 16);
+      if (!Number.isFinite(n)) return { r: 232, g: 165, b: 75 };
+      return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+    }
+
+    function sampleEnvelope(elapsed, xNorm) {
+      // xNorm 0..1 across visible window; scroll pattern envelope under a live reader
+      var iv = Math.max(80, intervalMs);
+      var n = steps.length || 1;
+      var cycle = n * iv;
+      var scroll = (elapsed * 0.55) % cycle;
+      var t = (xNorm * cycle + scroll) % cycle;
+      return intensity01(steps, intervalMs, t);
+    }
+
+    function drawFrame(now) {
+      var sz = resize();
+      var w = sz.w;
+      var h = sz.h;
+      var rgb = hexRgb(accent);
+      var mid = h * 0.5;
+      var elapsed = Math.max(0, now - startMs);
+      var targetAmp;
+
+      if (idleMode || !steps.length) {
+        targetAmp = 0.06 + 0.04 * Math.sin(now * 0.0011);
+      } else {
+        targetAmp = intensity01(steps, intervalMs, elapsed);
+      }
+
+      // ease amplitude for visual polish
+      smoothAmp += (targetAmp - smoothAmp) * (reduced ? 1 : 0.22);
+
+      var level = Math.round(smoothAmp * MAX_STEP);
+      if (onLevel) {
+        onLevel(show20 ? Math.round(smoothAmp * 20) : level, smoothAmp);
+      }
+
+      var dt = lastNow ? Math.min(48, now - lastNow) : 16;
+      lastNow = now;
+      // carrier speed rises with intensity (busier feel when hot)
+      phase += (dt / 1000) * (2.2 + smoothAmp * 9.5);
+
+      ctx.clearRect(0, 0, w, h);
+
+      // deep stage well
+      var bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, "rgba(0,0,0,0.55)");
+      bg.addColorStop(0.5, "rgba(12,16,20,0.35)");
+      bg.addColorStop(1, "rgba(0,0,0,0.65)");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      // soft radial bloom under the wave
+      var bloom = ctx.createRadialGradient(w * 0.5, mid, 4, w * 0.5, mid, h * 0.72);
+      bloom.addColorStop(
+        0,
+        "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + (0.08 + smoothAmp * 0.22) + ")"
+      );
+      bloom.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = bloom;
+      ctx.fillRect(0, 0, w, h);
+
+      // faint grid
+      ctx.strokeStyle = "rgba(139,150,159,0.12)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, mid);
+      ctx.lineTo(w, mid);
+      ctx.stroke();
+
+      var samples = Math.max(96, Math.floor(w / 2.2));
+      var pathTop = [];
+      var pathBot = [];
+      var i;
+      var maxY = h * 0.42;
+
+      for (i = 0; i <= samples; i++) {
+        var x = (i / samples) * w;
+        var xn = i / samples;
+        var env = idleMode
+          ? smoothAmp * (0.7 + 0.3 * Math.sin(xn * Math.PI * 2 + phase * 0.4))
+          : sampleEnvelope(elapsed, xn) * (0.35 + 0.65 * smoothAmp / Math.max(0.08, smoothAmp));
+
+        // local envelope peaking at live "now" (right-center ~ 0.62)
+        var focus = 1 - Math.min(1, Math.abs(xn - 0.62) * 2.4);
+        focus = focus * focus;
+        var local = clamp(env * (0.55 + focus * 0.55), 0, 1.15);
+
+        var carrier =
+          Math.sin(phase * 1.7 + xn * Math.PI * (5 + smoothAmp * 10)) * 0.55 +
+          Math.sin(phase * 3.1 + xn * Math.PI * 11) * 0.28 * (0.3 + smoothAmp) +
+          Math.sin(phase * 5.4 + xn * Math.PI * 19 + local * 2) *
+            0.18 *
+            local;
+
+        var yOff = local * maxY * carrier;
+        pathTop.push({ x: x, y: mid + yOff });
+        pathBot.push({ x: x, y: mid - yOff * 0.92 });
+      }
+
+      // filled body (reflection between top & bottom)
+      ctx.beginPath();
+      ctx.moveTo(pathTop[0].x, pathTop[0].y);
+      for (i = 1; i < pathTop.length; i++) ctx.lineTo(pathTop[i].x, pathTop[i].y);
+      for (i = pathBot.length - 1; i >= 0; i--) ctx.lineTo(pathBot[i].x, pathBot[i].y);
+      ctx.closePath();
+      var fill = ctx.createLinearGradient(0, 0, 0, h);
+      fill.addColorStop(
+        0,
+        "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + (0.05 + smoothAmp * 0.12) + ")"
+      );
+      fill.addColorStop(
+        0.5,
+        "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + (0.18 + smoothAmp * 0.28) + ")"
+      );
+      fill.addColorStop(
+        1,
+        "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + (0.04 + smoothAmp * 0.1) + ")"
+      );
+      ctx.fillStyle = fill;
+      ctx.fill();
+
+      function strokePath(pts, width, alpha) {
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for (var j = 1; j < pts.length; j++) ctx.lineTo(pts[j].x, pts[j].y);
+        ctx.strokeStyle =
+          "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + alpha + ")";
+        ctx.lineWidth = width;
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.stroke();
+      }
+
+      // glow layers
+      ctx.save();
+      ctx.shadowColor =
+        "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + (0.35 + smoothAmp * 0.45) + ")";
+      ctx.shadowBlur = 14 + smoothAmp * 22;
+      strokePath(pathTop, 2.2 + smoothAmp * 1.4, 0.95);
+      strokePath(pathBot, 1.6 + smoothAmp, 0.55);
+      ctx.restore();
+
+      strokePath(pathTop, 1.1, 1);
+      // white hot core near peaks
+      strokePath(pathTop, 0.6, 0.35 + smoothAmp * 0.4);
+
+      // live playhead
+      if (!idleMode) {
+        var px = w * 0.62;
+        var grad = ctx.createLinearGradient(px, 0, px, h);
+        grad.addColorStop(0, "rgba(255,246,224,0)");
+        grad.addColorStop(0.5, "rgba(255,246,224," + (0.35 + smoothAmp * 0.45) + ")");
+        grad.addColorStop(1, "rgba(255,246,224,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(px - 1.5, 0, 3, h);
+      }
+
+      // edge vignette
+      var vig = ctx.createLinearGradient(0, 0, w, 0);
+      vig.addColorStop(0, "rgba(8,10,12,0.65)");
+      vig.addColorStop(0.12, "rgba(8,10,12,0)");
+      vig.addColorStop(0.88, "rgba(8,10,12,0)");
+      vig.addColorStop(1, "rgba(8,10,12,0.65)");
+      ctx.fillStyle = vig;
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    function tick(now) {
+      if (!running) return;
+      if (!idleMode && !loop && untilMs && now > untilMs) {
+        stop({ toIdle: true });
+        return;
+      }
+      drawFrame(now);
+      if (reduced && idleMode) {
+        // static-ish idle: redraw rarely
+        raf = global.setTimeout(function () {
+          raf = global.requestAnimationFrame(tick);
+        }, 400);
+      } else {
+        raf = global.requestAnimationFrame(tick);
+      }
+    }
+
+    function clearRaf() {
+      if (!raf) return;
+      if (typeof raf === "number" && raf > 0) {
+        global.cancelAnimationFrame(raf);
+        try {
+          global.clearTimeout(raf);
+        } catch (e) {
+          /* ignore */
+        }
+      }
+      raf = 0;
+    }
+
+    /**
+     * @param {{
+     *   steps?: number[],
+     *   intervalMs?: number,
+     *   durationSec?: number,
+     *   loop?: boolean
+     * }} [p]
+     */
+    function start(p) {
+      p = p || {};
+      steps =
+        p.steps && p.steps.length
+          ? p.steps.map(function (v) {
+              return clamp(Number(v) || 0, 0, MAX_STEP);
+            })
+          : [3, 5, 4, 6, 2];
+      intervalMs = Math.max(100, Number(p.intervalMs) || 400);
+      startMs = performance.now();
+      loop = p.loop === true;
+      idleMode = false;
+      if (!loop && p.durationSec != null) {
+        untilMs = startMs + Math.max(0.4, Number(p.durationSec)) * 1000 + 160;
+      } else if (!loop) {
+        untilMs =
+          startMs +
+          Math.max(1.2, (steps.length * intervalMs) / 1000) * 1000 +
+          200;
+      } else {
+        untilMs = 0;
+      }
+      running = true;
+      clearRaf();
+      lastNow = 0;
+      raf = global.requestAnimationFrame(tick);
+    }
+
+    function idle() {
+      idleMode = true;
+      loop = true;
+      steps = [2, 3, 2, 4, 3];
+      intervalMs = 900;
+      startMs = performance.now();
+      untilMs = 0;
+      running = true;
+      clearRaf();
+      lastNow = 0;
+      raf = global.requestAnimationFrame(tick);
+    }
+
+    function stop(opts2) {
+      opts2 = opts2 || {};
+      clearRaf();
+      running = false;
+      idleMode = true;
+      if (opts2.toIdle) {
+        idle();
+      } else if (onLevel) {
+        onLevel(0, 0);
+      }
+      if (!opts2.toIdle) {
+        // one calm static frame
+        smoothAmp = 0.05;
+        drawFrame(performance.now());
+      }
+    }
+
+    function destroy() {
+      stop({});
+      running = false;
+    }
+
+    function isRunning() {
+      return running && !idleMode;
+    }
+
+    // first paint
+    resize();
+    idle();
+
+    return {
+      start: start,
+      stop: stop,
+      idle: idle,
+      destroy: destroy,
+      isRunning: isRunning,
+      resize: resize,
+    };
+  }
+
+  global.ChainHapticWave = {
+    create: createWavePreview,
+    intensity01: intensity01,
+    MAX_STEP: MAX_STEP,
+  };
+})(typeof window !== "undefined" ? window : globalThis);
+
+  </script>
+  <script>
+/* Static tip menu — baked-in pack or /menu pack.json. No remote kill-file on open. */
+
+(function () {
+  "use strict";
+
+  const PULSE_CHAIN = {
+    chainId: "0x171",
+    chainName: "PulseChain",
+    nativeCurrency: { name: "Pulse", symbol: "PLS", decimals: 18 },
+    rpcUrls: [
+      "https://rpc.pulsechain.com",
+      "https://pulsechain-rpc.publicnode.com",
+    ],
+    blockExplorerUrls: ["https://scan.pulsechain.com"],
+  };
+
+  function $(id) {
+    return document.getElementById(id);
+  }
+  function text(el, v) {
+    if (el) el.textContent = v == null ? "" : String(v);
+  }
+
+  let pack = null;
+  let selectedId = null;
+  let walletAccount = null;
+  let payAllowed = false;
+  let freshnessOk = false;
+  let vizRaf = null;
+  let vizSteps = [];
+  let vizInterval = 400;
+  let vizStart = 0;
+  let wavePreview = null;
+
+  const els = {
+    gate: $("gate"),
+    gateTitle: $("gate-title"),
+    gateBody: $("gate-body"),
+    warn: $("warn"),
+    announce: $("status-announce"),
+    packMeta: $("pack-meta"),
+    tipWallet: $("tip-wallet"),
+    chipFresh: $("chip-fresh"),
+    chipRev: $("chip-rev"),
+    exactTipLine: $("exact-tip-line"),
+    ring: $("pulse-ring"),
+    intensity: $("intensity-num"),
+    stageLine: $("stage-line"),
+    stageSub: $("stage-sub"),
+    featured: $("featured"),
+    grid: $("menu-grid"),
+    tipToken: $("tip-token"),
+    tipAmount: $("tip-amount"),
+    tipAddress: $("tip-address"),
+    tipStatus: $("tip-status"),
+    btnConnect: $("btn-connect"),
+    btnPay: $("btn-pay"),
+    selName: $("sel-name"),
+    selPrice: $("sel-price"),
+    stickName: $("stick-name"),
+    stickPrice: $("stick-price"),
+    stickPay: $("stick-pay"),
+  };
+
+  let lastAnnounce = "";
+
+  function announce(msg) {
+    const t = String(msg || "").trim();
+    if (!t || t === lastAnnounce) return;
+    lastAnnounce = t;
+    if (els.announce) {
+      els.announce.textContent = "";
+      setTimeout(function () {
+        if (els.announce) els.announce.textContent = t;
+      }, 30);
+    }
+  }
+
+  function ensureWavePreview() {
+    if (wavePreview) return wavePreview;
+    const canvas = $("wave-canvas");
+    if (!canvas || !window.ChainHapticWave) return null;
+    wavePreview = window.ChainHapticWave.create(canvas, {
+      scale20: false,
+      onLevel: function (level8) {
+        text(els.intensity, String(level8));
+      },
+    });
+    return wavePreview;
+  }
+
+  function setStatus(msg, isErr) {
+    text(els.tipStatus, msg || "");
+    if (els.tipStatus) els.tipStatus.classList.toggle("is-err", Boolean(isErr));
+  }
+
+  function showGate(title, body) {
+    if (els.gate) {
+      els.gate.classList.add("is-open");
+      els.gate.hidden = false;
+      els.gate.setAttribute("aria-hidden", "false");
+    }
+    text(els.gateTitle, title || "Menu locked");
+    text(
+      els.gateBody,
+      body || "This tip menu is no longer valid. Ask the host for a new download."
+    );
+    payAllowed = false;
+    freshnessOk = false;
+    updatePayButtons();
+  }
+
+  function hideGate() {
+    if (els.gate) {
+      els.gate.classList.remove("is-open");
+      els.gate.hidden = true;
+      els.gate.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  function showWarn(msg) {
+    if (!els.warn) return;
+    if (!msg) {
+      els.warn.hidden = true;
+      text(els.warn, "");
+      return;
+    }
+    els.warn.hidden = false;
+    text(els.warn, msg);
+  }
+
+  /** Drop legacy kill-switch fields so old zips still open offline. */
+  function sanitizePack(raw) {
+    if (!raw || typeof raw !== "object") return raw;
+    raw.checkUrl = "";
+    raw.freshness = "none";
+    // treat bad expiresAt as no expiry
+    if (raw.expiresAt != null && raw.expiresAt !== "") {
+      const exp = Date.parse(raw.expiresAt);
+      if (!Number.isFinite(exp)) raw.expiresAt = null;
+    }
+    return raw;
+  }
+
+  function formatUsd(u) {
+    if (u == null || !Number.isFinite(Number(u))) return "";
+    const n = Number(u);
+    if (n >= 10) return "$" + (Math.round(n * 10) / 10).toFixed(1);
+    return "$" + (Math.round(n * 100) / 100).toFixed(2);
+  }
+
+  function formatPls(p) {
+    const n = Number(p);
+    if (!Number.isFinite(n)) return String(p || "");
+    if (n >= 1000) return Math.round(n).toLocaleString();
+    return String(n);
+  }
+
+  function priceHeadline(it) {
+    const usd = formatUsd(it.priceUsd);
+    const asset = selectedToken();
+    const sym = String((asset && asset.symbol) || pack.nativeSymbol || "PLS").toUpperCase();
+    const stable = /^(E?DAI|E?USDC|E?USDT|USDC|USDT|DAI)$/.test(sym);
+    if (usd && stable) return { primary: usd, secondary: "" };
+    if (usd) {
+      return {
+        primary: usd,
+        secondary: formatPls(it.price) + " " + (pack.nativeSymbol || "PLS"),
+      };
+    }
+    return {
+      primary: formatPls(it.price) + " " + (pack.nativeSymbol || "PLS"),
+      secondary: "",
+    };
+  }
+
+  function outcomeLine(it) {
+    const bits = ["She feels this"];
+    if (it.timeSec != null) bits.push(it.timeSec + "s");
+    if (it.strokes != null) bits.push(it.strokes + " strokes");
+    return bits.join(" · ");
+  }
+
+  /** Exact amount customers must send (host matches tips by amount). */
+  function exactTipText(it) {
+    if (!it) return "Pick a pattern — amount locks to the menu price";
+    const ph = priceHeadline(it);
+    const hum = tipHumanAmount(it);
+    const tok = selectedToken();
+    const sym = String((tok && tok.symbol) || pack.nativeSymbol || "PLS");
+    if (ph.primary && ph.primary.charAt(0) === "$") {
+      return (
+        "Send exactly " +
+        ph.primary +
+        (ph.secondary ? " (" + ph.secondary + ")" : "") +
+        " · wrong size won’t match"
+      );
+    }
+    return (
+      "Send exactly " +
+      (hum != null ? hum : ph.primary || "?") +
+      " " +
+      sym +
+      " · wrong size won’t match"
+    );
+  }
+
+  function shortExactTip(it) {
+    if (!it) return "";
+    const ph = priceHeadline(it);
+    const hum = tipHumanAmount(it);
+    if (ph.primary && ph.primary.charAt(0) === "$") {
+      return "Exactly " + ph.primary;
+    }
+    const tok = selectedToken();
+    const sym = String((tok && tok.symbol) || pack.nativeSymbol || "PLS");
+    return "Exactly " + (hum != null ? hum : ph.primary) + " " + sym;
+  }
+
+  function itemById(id) {
+    return (pack.items || []).find(function (x) {
+      return x.id === id;
+    });
+  }
+
+  function isStableTok(sym) {
+    return /^(E?DAI|E?USDC|E?USDT|USDC|USDT|DAI)$/.test(String(sym || "").toUpperCase());
+  }
+
+  function selectedToken() {
+    if (!els.tipToken) return { kind: "native", symbol: pack.nativeSymbol || "PLS" };
+    try {
+      const v = els.tipToken.value;
+      if (v === "native" || !v) return { kind: "native", symbol: pack.nativeSymbol || "PLS" };
+      return JSON.parse(v);
+    } catch {
+      return { kind: "native", symbol: pack.nativeSymbol || "PLS" };
+    }
+  }
+
+  function tipHumanAmount(it) {
+    if (!it) return null;
+    const tok = selectedToken();
+    if (tok.kind === "token" && it.priceUsd != null && isStableTok(tok.symbol)) {
+      return String(Math.round(Number(it.priceUsd) * 100) / 100);
+    }
+    return String(it.price);
+  }
+
+  function buildWaveSvg(steps, w, h) {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+    svg.setAttribute("class", "pattern-wave");
+    const arr = steps && steps.length ? steps : [3, 5, 4];
+    const n = arr.length;
+    const padY = 4;
+    const gap = 2;
+    const barW = Math.max(2, (w - gap * (n - 1)) / n);
+    const maxI = 8;
+    for (let i = 0; i < n; i++) {
+      const v = Math.max(0, Math.min(maxI, Number(arr[i]) || 0));
+      const barH = ((h - padY * 2) * v) / maxI;
+      const x = i * (barW + gap);
+      const y = h - padY - barH;
+      const rect = document.createElementNS(ns, "rect");
+      rect.setAttribute("x", x.toFixed(2));
+      rect.setAttribute("y", y.toFixed(2));
+      rect.setAttribute("width", barW.toFixed(2));
+      rect.setAttribute("height", Math.max(1, barH).toFixed(2));
+      rect.setAttribute("rx", "1.5");
+      rect.setAttribute("class", "pattern-bar");
+      rect.dataset.i = String(i);
+      svg.appendChild(rect);
+    }
+    return svg;
+  }
+
+  function stopViz() {
+    if (vizRaf) cancelAnimationFrame(vizRaf);
+    vizRaf = null;
+    document.querySelectorAll(".pattern-bar.is-lit").forEach(function (el) {
+      el.classList.remove("is-lit");
+    });
+    if (els.ring) els.ring.classList.remove("is-live");
+    const wave = ensureWavePreview();
+    if (wave) wave.stop({ toIdle: true });
+  }
+
+  function tickCardBars(now) {
+    if (!vizSteps.length) return;
+    const iv = Math.max(80, vizInterval);
+    const cycle = vizSteps.length * iv;
+    const step = Math.floor(((now - vizStart) % cycle) / iv) % vizSteps.length;
+    document
+      .querySelectorAll(".is-selected .pattern-bar, .is-playing .pattern-bar")
+      .forEach(function (bar) {
+        const i = Number(bar.dataset.i);
+        if (i === step) bar.classList.add("is-lit");
+        else bar.classList.remove("is-lit");
+      });
+    vizRaf = requestAnimationFrame(tickCardBars);
+  }
+
+  function startViz(it) {
+    stopViz();
+    if (!it) return;
+    vizSteps = it.steps && it.steps.length ? it.steps : [3, 5, 4];
+    vizInterval = Math.max(120, Number(it.intervalMs) || 400);
+    vizStart = performance.now();
+    const wave = ensureWavePreview();
+    if (wave) {
+      wave.start({
+        steps: vizSteps,
+        intervalMs: vizInterval,
+        loop: true,
+      });
+    }
+    vizRaf = requestAnimationFrame(tickCardBars);
+  }
+
+  function rankedItems() {
+    return (pack.items || []).slice().sort(function (a, b) {
+      const ua = Number(a.priceUsd);
+      const ub = Number(b.priceUsd);
+      if (Number.isFinite(ua) && Number.isFinite(ub) && ua !== ub) return ua - ub;
+      return Number(a.price) - Number(b.price);
+    });
+  }
+
+  function salesPicks() {
+    const ranked = rankedItems();
+    if (!ranked.length) return [];
+    const byId = {};
+    ranked.forEach(function (it) {
+      byId[it.id] = it;
+    });
+    const popularAuto =
+      ranked[Math.min(ranked.length - 1, Math.floor(ranked.length * 0.62))];
+    const sci = ranked.filter(function (it) {
+      return it.science || it.tag === "science";
+    });
+    const premiumAuto = sci.length
+      ? sci[sci.length - 1]
+      : ranked[ranked.length - 1];
+    const signatureAuto = sci.length
+      ? sci[Math.min(sci.length - 1, Math.floor(sci.length * 0.55))]
+      : popularAuto;
+    const f = (pack && pack.featured) || {};
+    function pick(id, fb) {
+      return id && byId[id] ? byId[id] : fb;
+    }
+    const premium = pick(f.premiumId, premiumAuto);
+    const popular = pick(f.popularId, popularAuto);
+    const signature = pick(f.signatureId, signatureAuto);
+    return [
+      { it: premium, role: "premium", label: "Biggest" },
+      { it: popular, role: "popular", label: "Most pick this" },
+      { it: signature, role: "signature", label: "Great pick" },
+    ];
+  }
+
+  function makePick(it, role, label) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pick" + (role === "popular" ? " is-popular" : "");
+    btn.dataset.id = it.id;
+    const ph = priceHeadline(it);
+
+    const r = document.createElement("span");
+    r.className = "role";
+    r.textContent = label;
+    const name = document.createElement("span");
+    name.className = "pick-name";
+    name.textContent = it.name;
+    const wave = document.createElement("div");
+    wave.className = "wave";
+    wave.appendChild(buildWaveSvg(it.steps, 160, 32));
+    const out = document.createElement("p");
+    out.className = "outcome";
+    out.textContent = outcomeLine(it);
+    const price = document.createElement("span");
+    price.className = "price";
+    price.textContent = ph.primary;
+
+    btn.appendChild(r);
+    btn.appendChild(name);
+    btn.appendChild(wave);
+    btn.appendChild(out);
+    const exact = document.createElement("p");
+    exact.className = "exact-tip";
+    exact.textContent = shortExactTip(it);
+    btn.appendChild(exact);
+    btn.appendChild(price);
+    btn.addEventListener("click", function () {
+      selectItem(it.id);
+    });
+    return btn;
+  }
+
+  function makeCard(it) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "card";
+    card.dataset.id = it.id;
+    const ph = priceHeadline(it);
+    const h = document.createElement("h3");
+    h.textContent = it.name;
+    const wave = document.createElement("div");
+    wave.className = "wave";
+    wave.appendChild(buildWaveSvg(it.steps, 120, 32));
+    const out = document.createElement("p");
+    out.className = "outcome";
+    out.textContent = outcomeLine(it);
+    const exact = document.createElement("p");
+    exact.className = "exact-tip";
+    exact.textContent = shortExactTip(it);
+    const price = document.createElement("span");
+    price.className = "price";
+    price.textContent = ph.primary;
+    card.appendChild(h);
+    card.appendChild(wave);
+    card.appendChild(out);
+    card.appendChild(exact);
+    card.appendChild(price);
+    if (ph.secondary) {
+      const sec = document.createElement("span");
+      sec.className = "price-sub";
+      sec.textContent = ph.secondary;
+      card.appendChild(sec);
+    }
+    card.addEventListener("click", function () {
+      selectItem(it.id);
+    });
+    return card;
+  }
+
+  function renderMenu() {
+    if (els.featured) {
+      els.featured.textContent = "";
+      const seen = {};
+      salesPicks().forEach(function (row) {
+        if (!row.it || seen[row.it.id]) return;
+        seen[row.it.id] = true;
+        els.featured.appendChild(makePick(row.it, row.role, row.label));
+      });
+    }
+    if (els.grid) {
+      els.grid.textContent = "";
+      rankedItems().forEach(function (it) {
+        els.grid.appendChild(makeCard(it));
+      });
+    }
+  }
+
+  function updatePayButtons() {
+    const it = selectedId ? itemById(selectedId) : null;
+    const ph = it ? priceHeadline(it) : null;
+    const ready = Boolean(payAllowed && freshnessOk && it && walletAccount && pack.tipAddress);
+    document.body.classList.toggle("pay-ready", ready);
+    text(els.selName, it ? it.name : "No pattern");
+    text(els.selPrice, ph ? ph.primary : "—");
+    text(els.stickName, it ? it.name : payAllowed ? "Pick a pattern" : "Menu locked");
+    text(els.stickPrice, ph ? ph.primary : "—");
+    if (els.exactTipLine) {
+      const line = exactTipText(it);
+      text(els.exactTipLine, line);
+      els.exactTipLine.classList.toggle("is-empty", !it);
+    }
+
+    let label = "Pay";
+    let mode = "pick";
+    if (!payAllowed || !freshnessOk) {
+      label = "Menu locked";
+      mode = "locked";
+    } else if (!walletAccount) {
+      label = "Connect wallet";
+      mode = "connect";
+    } else if (!it) {
+      label = "Pick a pattern";
+      mode = "pick";
+    } else if (ph && ph.primary.charAt(0) === "$") {
+      label = "Pay exactly " + ph.primary + " · feel it";
+      mode = "pay";
+    } else {
+      const hum = tipHumanAmount(it);
+      const tok = selectedToken();
+      label =
+        "Pay exactly " +
+        (hum != null ? hum : "") +
+        " " +
+        ((tok && tok.symbol) || pack.nativeSymbol || "PLS") +
+        " · feel it";
+      mode = "pay";
+    }
+    if (els.btnPay) {
+      els.btnPay.disabled = mode === "locked" || mode === "pick";
+      els.btnPay.textContent = label;
+      els.btnPay.dataset.mode = mode;
+    }
+    if (els.stickPay) {
+      els.stickPay.disabled = mode === "locked";
+      els.stickPay.textContent = mode === "pay" ? "Pay exact" : label;
+      els.stickPay.dataset.mode = mode;
+    }
+  }
+
+  function selectItem(id, opts) {
+    opts = opts || {};
+    const soft = opts.soft === true;
+    if (!payAllowed || !freshnessOk) {
+      setStatus("This menu is locked. Ask the host for a new pack.", true);
+      announce("Menu locked — ask the host for a new pack");
+      return;
+    }
+    const it = itemById(id);
+    if (!it) return;
+    selectedId = id;
+    document.body.classList.toggle("soft-popular", soft);
+    document.querySelectorAll(".card, .pick").forEach(function (el) {
+      el.classList.toggle("is-selected", el.dataset.id === id);
+      el.classList.toggle("is-playing", !soft && el.dataset.id === id);
+    });
+    const hum = tipHumanAmount(it);
+    if (els.tipAmount && hum != null) els.tipAmount.value = hum;
+    const ph = priceHeadline(it);
+    if (soft) {
+      stopViz();
+      if (els.ring) {
+        els.ring.classList.remove("is-live");
+        els.ring.classList.add("is-popular-idle");
+        els.ring.style.setProperty("--fill", "8%");
+      }
+      text(els.intensity, "·");
+      text(els.stageLine, "Popular · " + it.name);
+      text(els.stageSub, exactTipText(it) + " · tap card to preview");
+      setStatus("Most pick this · " + shortExactTip(it) + " · tap for a preview");
+      updatePayButtons();
+      return;
+    }
+    if (els.ring) els.ring.classList.remove("is-popular-idle");
+    text(els.stageLine, "Preview · " + it.name);
+    text(els.stageSub, exactTipText(it));
+    startViz(it);
+    updatePayButtons();
+    setStatus(
+      "Preview · then send exactly " +
+        (ph.primary || hum || "the listed amount")
+    );
+    announce("Selected " + it.name + ". " + shortExactTip(it));
+  }
+
+  function fillTokens() {
+    if (!els.tipToken || !pack) return;
+    const cur = els.tipToken.value;
+    els.tipToken.textContent = "";
+    const o0 = document.createElement("option");
+    o0.value = "native";
+    o0.textContent = pack.nativeSymbol || "PLS";
+    els.tipToken.appendChild(o0);
+    (pack.tipTokens || []).forEach(function (t) {
+      if (!t.address) return;
+      const o = document.createElement("option");
+      o.value = JSON.stringify({
+        kind: "token",
+        symbol: t.symbol || "TOK",
+        address: t.address,
+        decimals: t.decimals != null ? t.decimals : 18,
+      });
+      o.textContent = t.symbol || "TOK";
+      els.tipToken.appendChild(o);
+    });
+    if (cur) {
+      for (let i = 0; i < els.tipToken.options.length; i++) {
+        if (els.tipToken.options[i].value === cur) {
+          els.tipToken.selectedIndex = i;
+          break;
+        }
+      }
+    }
+  }
+
+  function evaluateExpiryLocal() {
+    if (!pack || !pack.expiresAt) return { ok: true };
+    const exp = Date.parse(pack.expiresAt);
+    if (!Number.isFinite(exp)) return { ok: true };
+    const now = Date.now();
+    if (now >= exp) {
+      return {
+        ok: false,
+        hard: true,
+        title: "Menu expired",
+        message:
+          "This tip menu expired. Ask the host for a new download from Admin → Prices.",
+      };
+    }
+    const day = 24 * 3600 * 1000;
+    if (exp - now < day) {
+      return {
+        ok: true,
+        warn:
+          "Menu expires " +
+          new Date(exp).toLocaleString() +
+          " — host may send a new file.",
+      };
+    }
+    return { ok: true };
+  }
+
+  /**
+   * Open the menu unless optional local expiresAt has passed.
+   * Never fetches remote URLs (no CORS / file:// blocks).
+   */
+  function openMenu() {
+    const local = evaluateExpiryLocal();
+    if (local.hard) {
+      showGate(local.title, local.message);
+      chipFresh("Expired", "bad");
+      updatePayButtons();
+      return false;
+    }
+    if (local.warn) showWarn(local.warn);
+    else if (pack && pack.message) showWarn(String(pack.message));
+    else showWarn("");
+
+    freshnessOk = true;
+    payAllowed = true;
+    hideGate();
+    chipFresh("Menu ready", "ok");
+    if (els.chipRev) els.chipRev.hidden = true;
+    updatePayButtons();
+    return true;
+  }
+
+  function chipFresh(label, cls) {
+    if (!els.chipFresh) return;
+    text(els.chipFresh, label);
+    els.chipFresh.className = "chip" + (cls ? " is-" + cls : "");
+  }
+
+  function getEthereum() {
+    return typeof window !== "undefined" ? window.ethereum : null;
+  }
+
+  async function ensureChain() {
+    const eth = getEthereum();
+    if (!eth) throw new Error("Install MetaMask (or another wallet)");
+    const chainId = Number(pack.chainId) || 369;
+    const hex = "0x" + chainId.toString(16);
+    try {
+      await eth.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: hex }],
+      });
+    } catch (e) {
+      if (e && (e.code === 4902 || String(e.message || "").includes("Unrecognized"))) {
+        await eth.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: hex,
+              chainName: PULSE_CHAIN.chainName,
+              nativeCurrency: PULSE_CHAIN.nativeCurrency,
+              rpcUrls: PULSE_CHAIN.rpcUrls,
+              blockExplorerUrls: PULSE_CHAIN.blockExplorerUrls,
+            },
+          ],
+        });
+      } else throw e;
+    }
+  }
+
+  async function connectWallet() {
+    const eth = getEthereum();
+    if (!eth) {
+      setStatus("Install MetaMask to send tips.", true);
+      return;
+    }
+    try {
+      setStatus("Connecting…");
+      await ensureChain();
+      const accounts = await eth.request({ method: "eth_requestAccounts" });
+      walletAccount = accounts && accounts[0] ? String(accounts[0]) : null;
+      text(
+        els.tipWallet,
+        walletAccount
+          ? "Connected: " + walletAccount.slice(0, 6) + "…" + walletAccount.slice(-4)
+          : ""
+      );
+      if (els.btnConnect) {
+        els.btnConnect.textContent = walletAccount
+          ? walletAccount.slice(0, 6) + "…"
+          : "Connect wallet";
+      }
+      setStatus(
+        walletAccount
+          ? "Wallet ready · pick a pattern · send the exact amount"
+          : "No account"
+      );
+      if (walletAccount) announce("Wallet connected");
+      updatePayButtons();
+    } catch (e) {
+      setStatus(e.message || String(e), true);
+    }
+  }
+
+  function humanToWeiHex(human, decimals) {
+    const s = String(human || "0").trim();
+    if (!/^\d+(\.\d+)?$/.test(s)) throw new Error("Invalid amount");
+    const parts = s.split(".");
+    const whole = parts[0] || "0";
+    let frac = parts[1] || "";
+    if (frac.length > decimals) frac = frac.slice(0, decimals);
+    while (frac.length < decimals) frac += "0";
+    const raw = (whole + frac).replace(/^0+(?=\d)/, "") || "0";
+    let bi = BigInt(raw);
+    return "0x" + bi.toString(16);
+  }
+
+  async function sendTip() {
+    if (!payAllowed || !freshnessOk) {
+      setStatus("Menu locked — cannot pay with this menu.", true);
+      return;
+    }
+    if (!openMenu()) return;
+
+    const eth = getEthereum();
+    if (!eth) {
+      setStatus("No wallet found.", true);
+      return;
+    }
+    const to = pack.tipAddress;
+    if (!to) {
+      setStatus("Tip address missing in this menu.", true);
+      return;
+    }
+    const it = selectedId ? itemById(selectedId) : null;
+    if (!it) {
+      setStatus("Pick a pattern first.", true);
+      return;
+    }
+    const hum = els.tipAmount ? els.tipAmount.value : tipHumanAmount(it);
+    const tok = selectedToken();
+    try {
+      await ensureChain();
+      if (!walletAccount) {
+        await connectWallet();
+        if (!walletAccount) return;
+      }
+      let tx;
+      if (tok.kind === "token") {
+        const dec = tok.decimals != null ? Number(tok.decimals) : 18;
+        const value = humanToWeiHex(hum, dec);
+        // ERC-20 transfer(address,uint256)
+        const method =
+          "0xa9059cbb" +
+          String(to).replace(/^0x/, "").toLowerCase().padStart(64, "0") +
+          BigInt(value).toString(16).padStart(64, "0");
+        tx = {
+          from: walletAccount,
+          to: tok.address,
+          data: method,
+          value: "0x0",
+        };
+      } else {
+        const value = humanToWeiHex(hum, 18);
+        tx = {
+          from: walletAccount,
+          to: to,
+          value: value,
+        };
+      }
+      setStatus("Confirm in wallet…");
+      const hash = await eth.request({
+        method: "eth_sendTransaction",
+        params: [tx],
+      });
+      setStatus(
+        "Tip sent · " +
+          String(hash).slice(0, 12) +
+          "… host feels it when the chain confirms"
+      );
+      announce("Tip sent");
+      text(els.stageLine, "Tip sent");
+      text(els.stageSub, it.name + " · exact amount · host is watching the chain");
+    } catch (e) {
+      setStatus(e.message || String(e), true);
+    }
+  }
+
+  function onPayClick() {
+    const mode =
+      (els.stickPay && els.stickPay.dataset.mode) ||
+      (els.btnPay && els.btnPay.dataset.mode) ||
+      "pay";
+    if (mode === "locked") return;
+    if (mode === "connect") {
+      connectWallet();
+      return;
+    }
+    if (mode === "pick") {
+      setStatus("Pick a pattern first", true);
+      return;
+    }
+    sendTip();
+  }
+
+  async function loadPack() {
+    // 1) Embedded in export (works with file:// — no CORS fetch)
+    if (typeof window !== "undefined" && window.__CHAIN_HAPTIC_PACK__) {
+      return sanitizePack(window.__CHAIN_HAPTIC_PACK__);
+    }
+    const el = document.getElementById("pack-data");
+    if (el && el.textContent) {
+      try {
+        return sanitizePack(JSON.parse(el.textContent));
+      } catch {
+        /* fall through */
+      }
+    }
+    // 2) HTTP(S) / host /menu — fetch pack.json beside this page
+    if (typeof location !== "undefined" && /^https?:/i.test(location.protocol)) {
+      const r = await fetch("pack.json", { cache: "no-store" });
+      if (!r.ok) {
+        throw new Error(
+          "pack.json missing — open /menu on the host, or Download tip menu again"
+        );
+      }
+      return sanitizePack(await r.json());
+    }
+    throw new Error(
+      "Menu file incomplete. Admin → Prices → Download tip menu, then open index.html from that zip."
+    );
+  }
+
+  function boot() {
+    try {
+      // sync path when pack is embedded; async only for http pack.json
+      const embedded =
+        typeof window !== "undefined" && window.__CHAIN_HAPTIC_PACK__;
+      if (embedded) {
+        pack = sanitizePack(window.__CHAIN_HAPTIC_PACK__);
+        finishBoot();
+        return;
+      }
+      loadPack()
+        .then(function (p) {
+          pack = p;
+          finishBoot();
+        })
+        .catch(function (e) {
+          showGate(
+            "Menu missing",
+            (e && e.message) ||
+              "Could not load the tip menu. Re-export from Admin → Prices."
+          );
+          chipFresh("No menu", "bad");
+        });
+    } catch (e) {
+      showGate(
+        "Menu missing",
+        (e && e.message) || "Could not load the tip menu."
+      );
+      chipFresh("No menu", "bad");
+    }
+  }
+
+  function finishBoot() {
+    if (!pack || typeof pack !== "object") {
+      showGate("Menu missing", "Menu data empty");
+      chipFresh("No menu", "bad");
+      return;
+    }
+
+    text(
+      els.packMeta,
+      pack.expiresAt
+        ? "Expires " + new Date(pack.expiresAt).toLocaleString()
+        : "Live menu"
+    );
+    if (els.chipRev) {
+      els.chipRev.hidden = true;
+    }
+    if (els.tipAddress) {
+      text(
+        els.tipAddress,
+        pack.tipAddress
+          ? pack.tipAddress.slice(0, 8) + "…" + pack.tipAddress.slice(-6)
+          : "—"
+      );
+      els.tipAddress.title = pack.tipAddress || "";
+    }
+
+    fillTokens();
+    renderMenu();
+    ensureWavePreview();
+    openMenu();
+
+    if (payAllowed && freshnessOk) {
+      const picks = salesPicks();
+      const pop = picks.find(function (p) {
+        return p.role === "popular";
+      });
+      if (pop && pop.it) selectItem(pop.it.id, { soft: true });
+    }
+
+    // Only re-check optional local expiry (no network)
+    setInterval(function () {
+      openMenu();
+    }, 60 * 1000);
+  }
+
+  if (els.btnConnect) els.btnConnect.addEventListener("click", connectWallet);
+  if (els.btnPay) els.btnPay.addEventListener("click", onPayClick);
+  if (els.stickPay) els.stickPay.addEventListener("click", onPayClick);
+    if (els.tipToken) {
+      els.tipToken.addEventListener("change", function () {
+        if (selectedId) {
+          const it = itemById(selectedId);
+          const hum = tipHumanAmount(it);
+          if (els.tipAmount && hum != null) els.tipAmount.value = hum;
+          // refresh exact copy on cards/dock after token change
+          renderMenu();
+          if (selectedId) {
+            document.querySelectorAll(".card, .pick").forEach(function (el) {
+              el.classList.toggle("is-selected", el.dataset.id === selectedId);
+            });
+          }
+          updatePayButtons();
+        }
+      });
+    }
+
+  const eth = getEthereum();
+  if (eth && eth.on) {
+    eth.on("accountsChanged", function (accs) {
+      walletAccount = accs && accs[0] ? String(accs[0]) : null;
+      text(
+        els.tipWallet,
+        walletAccount
+          ? "Connected: " + walletAccount.slice(0, 6) + "…" + walletAccount.slice(-4)
+          : ""
+      );
+      updatePayButtons();
+    });
+  }
+
+  boot();
+})();
+
+  </script>
+</body>
+</html>

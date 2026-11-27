@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Choose a Bluetooth toy</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0a1524;
+        --panel: #122033;
+        --line: #24364c;
+        --text: #e8eef7;
+        --muted: #8fa3bb;
+        --accent: #3b9eff;
+        --accent-press: #2a7fd6;
+        --linked: #3ecf8e;
+        --linked-off: #c9a227;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font: 14px/1.4 system-ui, Segoe UI, sans-serif;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1.1rem 1rem;
+        gap: 0.85rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 650;
+      }
+      p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+      #status {
+        margin: 0;
+        color: var(--accent);
+        font-size: 0.86rem;
+        min-height: 1.2em;
+      }
+      #status:empty {
+        display: none;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      #list {
+        flex: 1;
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--panel);
+        min-height: 12rem;
+      }
+      button.device {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.85rem 1rem;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        background: transparent;
+        color: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+      button.device:last-child {
+        border-bottom: 0;
+      }
+      button.device:hover,
+      button.device:focus-visible {
+        background: color-mix(in srgb, var(--accent) 18%, transparent);
+        outline: none;
+      }
+      button.device.is-selected {
+        background: color-mix(in srgb, var(--accent) 22%, transparent);
+      }
+      button.device.is-selected:hover,
+      button.device.is-selected:focus-visible {
+        background: color-mix(in srgb, var(--accent) 28%, transparent);
+      }
+      button.device.is-linked .dot {
+        background: var(--linked);
+      }
+      button.device.is-linked-off .dot {
+        background: var(--linked-off);
+      }
+      button.device:disabled {
+        opacity: 0.55;
+        cursor: default;
+      }
+      .check {
+        width: 1.05rem;
+        height: 1.05rem;
+        border-radius: 4px;
+        border: 1.5px solid var(--muted);
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        color: transparent;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+      button.device.is-selected .check {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #041018;
+      }
+      .dot {
+        width: 0.55rem;
+        height: 0.55rem;
+        border-radius: 50%;
+        background: var(--accent);
+        flex: 0 0 auto;
+        pointer-events: none;
+      }
+      .copy {
+        flex: 1;
+        min-width: 0;
+        pointer-events: none;
+      }
+      .name-row {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .name {
+        font-weight: 600;
+      }
+      .badge {
+        font-size: 0.72rem;
+        font-weight: 650;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: var(--linked);
+        border: 1px solid color-mix(in srgb, var(--linked) 55%, transparent);
+        border-radius: 999px;
+        padding: 0.08rem 0.45rem;
+      }
+      .badge.off {
+        color: var(--linked-off);
+        border-color: color-mix(in srgb, var(--linked-off) 55%, transparent);
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+      #empty {
+        padding: 2rem 1rem;
+        text-align: center;
+        color: var(--muted);
+      }
+      .actions {
+        display: flex;
+        gap: 0.6rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+      .btn {
+        appearance: none;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--text);
+        padding: 0.55rem 0.9rem;
+        cursor: pointer;
+        font: inherit;
+      }
+      .btn:hover {
+        border-color: var(--muted);
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+      .btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #041018;
+        font-weight: 650;
+      }
+      .btn.primary:hover:not(:disabled) {
+        background: var(--accent-press);
+        border-color: var(--accent-press);
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h1>Choose Bluetooth toys</h1>
+      <p>
+        Power toys on and nearby. Click to select several, then link them in one
+        go. Already linked toys are marked.
+      </p>
+      <p id="status" aria-live="polite"></p>
+    </div>
+    <div class="toolbar">
+      <button type="button" class="btn" id="select-new">Select all new</button>
+      <button type="button" class="btn" id="clear-sel">Clear selection</button>
+    </div>
+    <div
+      id="list"
+      role="listbox"
+      aria-multiselectable="true"
+      aria-label="Bluetooth devices"
+    >
+      <div id="empty">Scanning…</div>
+    </div>
+    <div class="actions">
+      <button type="button" class="btn" id="cancel">Cancel</button>
+      <button type="button" class="btn primary" id="select" disabled>
+        Link selected
+      </button>
+    </div>
+    <script>
+      const listEl = document.getElementById('list')
+      const selectBtn = document.getElementById('select')
+      const cancelBtn = document.getElementById('cancel')
+      const selectNewBtn = document.getElementById('select-new')
+      const clearSelBtn = document.getElementById('clear-sel')
+      const statusEl = document.getElementById('status')
+      /** @type {Set<string>} */
+      const selected = new Set()
+      /** @type {Map<string, any>} */
+      const byId = new Map()
+      /** @type {string[]} */
+      let order = []
+      let linking = false
+
+      function fingerprint(d) {
+        return [
+          d.deviceId,
+          d.deviceName,
+          d.alreadyLinked ? '1' : '0',
+          d.linkedOnline ? '1' : '0',
+          d.linkedLabel || '',
+        ].join('|')
+      }
+
+      function metaText(d) {
+        if (d.alreadyLinked) {
+          return d.linkedOnline
+            ? 'Already imported — select to re-link'
+            : 'Already imported (offline) — select to re-link'
+        }
+        return /lvs|nora|love/i.test(d.deviceName || '')
+          ? 'Lovense-style name · not linked yet'
+          : 'Bluetooth device · not linked yet'
+      }
+
+      function syncSelectButton() {
+        const n = selected.size
+        selectBtn.disabled = linking || n === 0
+        selectNewBtn.disabled = linking
+        clearSelBtn.disabled = linking || n === 0
+        cancelBtn.disabled = linking
+        if (n === 0) {
+          selectBtn.textContent = 'Link selected'
+          return
+        }
+        const anyLinked = [...selected].some((id) => byId.get(id)?.alreadyLinked)
+        const anyNew = [...selected].some((id) => !byId.get(id)?.alreadyLinked)
+        if (anyLinked && !anyNew) {
+          selectBtn.textContent =
+            n === 1 ? 'Re-link selected' : `Re-link ${n} toys`
+        } else if (n === 1) {
+          selectBtn.textContent = anyLinked ? 'Re-link selected' : 'Link selected'
+        } else {
+          selectBtn.textContent = `Link ${n} toys`
+        }
+      }
+
+      function paintSelection(btn, id) {
+        btn.classList.toggle('is-selected', selected.has(id))
+        btn.setAttribute('aria-selected', selected.has(id) ? 'true' : 'false')
+        const check = btn.querySelector('.check')
+        if (check) check.textContent = selected.has(id) ? '✓' : ''
+      }
+
+      function paintRow(btn, d) {
+        paintSelection(btn, d.deviceId)
+        btn.classList.toggle('is-linked', Boolean(d.alreadyLinked))
+        btn.classList.toggle(
+          'is-linked-off',
+          Boolean(d.alreadyLinked && !d.linkedOnline),
+        )
+        btn.disabled = linking
+        const nameEl = btn.querySelector('.name')
+        if (nameEl) nameEl.textContent = d.deviceName || 'Unknown device'
+        const metaEl = btn.querySelector('.meta')
+        if (metaEl) metaEl.textContent = metaText(d)
+        const row = btn.querySelector('.name-row')
+        let badge = row?.querySelector('.badge')
+        if (d.alreadyLinked && d.linkedLabel) {
+          if (!badge && row) {
+            badge = document.createElement('span')
+            badge.className = 'badge'
+            row.append(badge)
+          }
+          if (badge) {
+            badge.classList.toggle('off', !d.linkedOnline)
+            badge.textContent = d.linkedOnline ? 'Linked' : 'Linked · offline'
+          }
+        } else if (badge) {
+          badge.remove()
+        }
+        btn.dataset.fp = fingerprint(d)
+      }
+
+      function toggleId(id) {
+        if (linking) return
+        if (selected.has(id)) selected.delete(id)
+        else selected.add(id)
+        for (const el of listEl.querySelectorAll('button.device')) {
+          paintSelection(el, el.dataset.id || '')
+        }
+        syncSelectButton()
+      }
+
+      function makeRow(d) {
+        const btn = document.createElement('button')
+        btn.type = 'button'
+        btn.className = 'device'
+        btn.setAttribute('role', 'option')
+        btn.dataset.id = d.deviceId
+        btn.innerHTML =
+          '<span class="check" aria-hidden="true"></span><span class="dot" aria-hidden="true"></span><span class="copy"><div class="name-row"><span class="name"></span></div><div class="meta"></div></span>'
+        btn.addEventListener('click', () => {
+          toggleId(d.deviceId)
+        })
+        btn.addEventListener('dblclick', () => {
+          if (linking) return
+          selected.clear()
+          selected.add(d.deviceId)
+          window.blePicker.pick([d.deviceId])
+        })
+        paintRow(btn, d)
+        return btn
+      }
+
+      function showEmpty() {
+        listEl.replaceChildren()
+        const empty = document.createElement('div')
+        empty.id = 'empty'
+        empty.textContent = 'Scanning… keep the toys awake'
+        listEl.append(empty)
+        selected.clear()
+        syncSelectButton()
+      }
+
+      function applyDevices(next) {
+        const list = Array.isArray(next) ? next : []
+        if (!list.length) {
+          byId.clear()
+          order = []
+          showEmpty()
+          return
+        }
+
+        const nextOrder = list.map((d) => d.deviceId)
+        const nextMap = new Map(list.map((d) => [d.deviceId, d]))
+
+        // Same set + same order + same fingerprints → no DOM work (stops hover flash).
+        const sameShape =
+          nextOrder.length === order.length &&
+          nextOrder.every((id, i) => id === order[i]) &&
+          nextOrder.every((id) => {
+            const prev = byId.get(id)
+            const cur = nextMap.get(id)
+            return prev && cur && fingerprint(prev) === fingerprint(cur)
+          })
+        if (sameShape) return
+
+        const empty = listEl.querySelector('#empty')
+        if (empty) empty.remove()
+
+        for (const id of [...order]) {
+          if (nextMap.has(id)) continue
+          const el = listEl.querySelector(
+            `button.device[data-id="${CSS.escape(id)}"]`,
+          )
+          el?.remove()
+          byId.delete(id)
+          selected.delete(id)
+        }
+
+        let anchor = null
+        for (const d of list) {
+          let btn = listEl.querySelector(
+            `button.device[data-id="${CSS.escape(d.deviceId)}"]`,
+          )
+          if (!btn) {
+            btn = makeRow(d)
+            if (anchor && anchor.nextSibling) {
+              listEl.insertBefore(btn, anchor.nextSibling)
+            } else if (!anchor && listEl.firstChild) {
+              listEl.insertBefore(btn, listEl.firstChild)
+            } else {
+              listEl.append(btn)
+            }
+          } else if (btn.dataset.fp !== fingerprint(d)) {
+            paintRow(btn, d)
+          } else {
+            paintSelection(btn, d.deviceId)
+            btn.disabled = linking
+          }
+          if (anchor) {
+            if (anchor.nextSibling !== btn) {
+              listEl.insertBefore(btn, anchor.nextSibling)
+            }
+          } else if (listEl.firstChild !== btn) {
+            listEl.insertBefore(btn, listEl.firstChild)
+          }
+          anchor = btn
+          byId.set(d.deviceId, d)
+        }
+
+        order = nextOrder
+        for (const id of [...selected]) {
+          if (!byId.has(id)) selected.delete(id)
+        }
+        syncSelectButton()
+      }
+
+      window.blePicker.onDevices((next) => {
+        applyDevices(next)
+      })
+      window.blePicker.onStatus((text) => {
+        statusEl.textContent = text
+        linking = Boolean(text)
+        for (const el of listEl.querySelectorAll('button.device')) {
+          el.disabled = linking
+        }
+        syncSelectButton()
+      })
+
+      selectBtn.addEventListener('click', () => {
+        if (!selected.size || linking) return
+        linking = true
+        syncSelectButton()
+        window.blePicker.pick([...selected])
+      })
+      selectNewBtn.addEventListener('click', () => {
+        if (linking) return
+        selected.clear()
+        for (const [id, d] of byId) {
+          if (!d.alreadyLinked) selected.add(id)
+        }
+        for (const el of listEl.querySelectorAll('button.device')) {
+          paintSelection(el, el.dataset.id || '')
+        }
+        syncSelectButton()
+      })
+      clearSelBtn.addEventListener('click', () => {
+        if (linking) return
+        selected.clear()
+        for (const el of listEl.querySelectorAll('button.device')) {
+          paintSelection(el, el.dataset.id || '')
+        }
+        syncSelectButton()
+      })
+      cancelBtn.addEventListener('click', () => window.blePicker.cancel())
+      syncSelectButton()
+    </script>
+  </body>
+</html>

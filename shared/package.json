@@ -1,0 +1,20 @@
+{
+  "name": "@pulsefans/domain",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Just The Tip shared domain — tip math, chain watcher, patterns (platform-neutral)",
+  "exports": {
+    ".": "./src/index.ts",
+    "./chain/*": "./src/chain/*.ts",
+    "./state/*": "./src/state/*.ts",
+    "./utils/*": "./src/utils/*.ts",
+    "./types/*": "./src/types/*.ts"
+  },
+  "peerDependencies": {
+    "viem": "^2.55.0"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}
