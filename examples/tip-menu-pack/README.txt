@@ -1,4 +1,4 @@
-Tip menu (everything is in index.html)
+﻿Tip menu (everything is in index.html)
 ======================================
 
 1. Open index.html  (double-click is fine)
@@ -9,4 +9,4 @@ Host PC keeps chain-haptic running (watch + toys).
 When prices change: Admin → Download tip menu → use the new zip.
 
 catalogRevision: 8
-tipAddress: 0x02db55ca28ba4b76120a0c7b94be6c27a33afffd
+tipAddress: 0x0000000000000000000000000000000000000001

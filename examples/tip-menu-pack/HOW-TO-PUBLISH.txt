@@ -1,4 +1,4 @@
-Customer pack export
+﻿Customer pack export
 ====================
 
 1. Upload active.json to this public URL (overwrite each price change):
@@ -15,4 +15,4 @@ Customer pack export
 
 catalogRevision: 8
 expiresAt: 2026-08-11T02:24:02.481Z
-tipAddress: 0x02db55ca28ba4b76120a0c7b94be6c27a33afffd
+tipAddress: 0x0000000000000000000000000000000000000001
