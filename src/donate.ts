@@ -11,7 +11,7 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const SEEN_KEY = 'ihmb-donate-updated'
 const MAX_FUTURE_DAYS = 2
 
-function b64ToU8(b64: string): Uint8Array {
+function b64ToU8(b64: string): Uint8Array<ArrayBuffer> {
   const bin = atob(b64)
   const out = new Uint8Array(bin.length)
   for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i)
@@ -59,7 +59,7 @@ async function verifyDonateSig(
     )
     const msg = new TextEncoder().encode(
       `v${v}\n${updated}\n${address.toLowerCase()}\n${label}`,
-    )
+    ) as Uint8Array<ArrayBuffer>
     return crypto.subtle.verify('Ed25519', key, b64ToU8(sigB64), msg)
   } catch {
     return false
