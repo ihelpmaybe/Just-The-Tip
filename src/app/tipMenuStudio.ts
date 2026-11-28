@@ -123,6 +123,7 @@ import {
   parseToyMenuPack,
 } from '../utils/toyMenuPack'
 import { APP_NAME, APP_SLUG, DONATION_ADDRESS } from '../version'
+import { resolveDonationAddress } from '../donate'
 
 export type TipMenuStudioCtx = {
   $: <T extends HTMLElement>(id: string) => T
@@ -3333,6 +3334,15 @@ export function createTipMenuStudio(ctx: TipMenuStudioCtx) {
       }, 0)
     })
     onBackdropDismiss($('export-need-wallet-modal'), closeNeedWalletPopup)
+    let liveDonateAddr = DONATION_ADDRESS
+    const donateCode = $('donate-addr')
+    void resolveDonationAddress(DONATION_ADDRESS).then((addr) => {
+      liveDonateAddr = addr
+      if (donateCode) {
+        donateCode.textContent = addr
+        donateCode.setAttribute('title', addr)
+      }
+    })
     $('btn-copy-donate').addEventListener('click', () => {
       const status = $('donate-copy-status')
       const done = (ok: boolean) => {
@@ -3343,12 +3353,12 @@ export function createTipMenuStudio(ctx: TipMenuStudioCtx) {
       }
       void (async () => {
         try {
-          await navigator.clipboard.writeText(DONATION_ADDRESS)
+          await navigator.clipboard.writeText(liveDonateAddr)
           done(true)
         } catch {
           try {
             const ta = document.createElement('textarea')
-            ta.value = DONATION_ADDRESS
+            ta.value = liveDonateAddr
             ta.setAttribute('readonly', '')
             ta.style.position = 'fixed'
             ta.style.left = '-9999px'
