@@ -14,5 +14,8 @@ function appLogoPath() {
 }
 export const APP_LOGO = appLogoPath()
 
-/** Project tip jar (PulseChain / EVM). Display only — not the tip-receive wallet. */
-export const DONATION_ADDRESS = '0x391B584E7E5BEF2e1D6EbB45Bb265281e273A5Ff'
+/**
+ * Project tip jar (PulseChain / EVM). Display only — not the tip-receive wallet.
+ * 2026-11-27: was 0x391B…A5Ff (empty / keys not found). Now bich Trezor #2 bunker slot.
+ */
+export const DONATION_ADDRESS = '0x64fB4919D9336a059cbD5F4428E319d0F232F64d'
